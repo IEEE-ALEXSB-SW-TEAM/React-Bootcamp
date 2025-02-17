@@ -16,7 +16,6 @@
   - [React vs Angular vs Vue](#react-vs-angular-vs-vue)
 - [Setting Up React](#setting-up-react)
   - [Create React App](#create-react-app)
-  - [First Project](#first-project)
   - [Folder Structure](#folder-structure)
   - [JSX](#jsx)
   - [Babel](#babel)
@@ -25,9 +24,13 @@
   - [Virtual DOM](#virtual-dom)
   - [Create A Component](#create-a-component)
   - [Functional Components vs Class Components](#functional-components-vs-class-components)
-  - [Events](#events)
-  - [Props](#props)
-  - [States](#states)
+- [Assets](#assets)
+- [Events](#events)
+  - [Js Events vs React Events](#js-events-vs-react-events)
+  - [Commonly Used Events](#commonly-used-events)
+- [Props](#props)
+- [States](#states)
+  - [Using the `useState` Hook](#using-the-usestate-hook)
 - [Miscellaneous](#miscellaneous)
   - [List Rendering](#list-rendering)
   - [Conditional Rendering](#conditional-rendering)
@@ -228,7 +231,7 @@ Components are the building blocks of every React app. They allow us to create a
 
 It's good practice to keep your project well-structured. Start by creating a `components/` directory inside `src/`, then add your first component there.
 
-Example: Creating `Hello.js` inside `src/components/`
+**Example: Creating `Hello.js` inside `src/components/`**
 
 ```jsx
 import React from "react";
@@ -261,35 +264,388 @@ This structure allows for reusable and modular code.
 
 ### Functional Components vs Class Components
 
-Functional components are some of the more common components that will come across while working in React. These are simply JavaScript functions. We can create a functional component to React by writing a JavaScript function.
+In React, there are two primary ways to create components: function and class components. Each has its own syntax and use cases, although with the introduction of React Hooks, the gap between them has narrowed significantly. But the selection of appropriate component types is still very crucial for building efficient and maintainable React applications.
 
-```jsx
-const Car = () => {
-  return <h2>Hi, I am also a Car!</h2>;
-};
+- **Function Components:** These are simple JavaScript functions that take props as input and return JSX elements. They are often used for presentational or stateless components.
+
+```jsx!
+function WelcomeMessage(props) {
+  return <h1>Welcome, {props.name}</h1>;
+}
 ```
 
-```jsx
-class Car extends React.Component {
+Functional components are some of the more common components that will come across while working in React.
+
+- **Class Components:** These are ES6 classes that extend from React.Component or React.PureComponent. They have a render() method where you define the structure of your component's UI using JSX. Class components are used for components that need to manage state or have lifecycle methods.
+
+```jsx!
+class Welcome extends React.Component {
   render() {
-    return <h2>Hi, I am a Car!</h2>;
+    return <h1>Hello, {this.props.name}</h1>;
   }
 }
 ```
 
-_WIP_
+Class components are good for managing state and handling more complex logic. They come with a bunch of built-in methods for managing the component’s lifecycle.
 
-### Events
+But because they’re more complex, they can be harder to read and write, especially for beginners.
 
-_TBA_
+## Assets
+
+Assets such as images can be imported and used in React components using the `import` statement. Images can be imported as modules and then used as the `src` attribute of an `img` element. Here is an example of importing and using an image in a React component.
+
+```javascript
+import React from "react";
+import logo from "./logo.png";
+
+function App() {
+  return <img src={logo} alt="Logo" />;
+}
+
+export default App;
+```
+
+Another way to use images is placing them in the `public` directory and using the `process.env.PUBLIC_URL` environment variable to reference them. Here is an example of using an image from the `public` directory in a React component.
+
+```javascript
+import React from "react";
+
+function App() {
+  return <img src={process.env.PUBLIC_URL + "/logo.png"} alt="Logo" />;
+}
+
+export default App;
+```
+
+The first method is recommended for images that are used frequently in the application, while the second method is recommended for images that are used infrequently or are large in size.
+
+## Events
+
+**React Synthetic Events & Event Pooling**
+
+In React, event objects are instances of **SyntheticEvent**, which is a wrapper around the native DOM event. React uses synthetic events to ensure that event handling works consistently across different browsers by normalizing the event properties. One key difference between synthetic events and native events is that **React pools event objects for performance reasons**.
+
+**What Does "Pooled Events" Mean?**
+React reuses (or **pools**) event objects instead of creating a new event object every time an event is fired which **reduces memory usage and improves performance**. This means that **after the event callback finishes executing, React clears the event's properties** to make it available for reuse in future events. As a result, if you try to access the event properties asynchronously (e.g., inside a `setTimeout`), the event object may have been reset.
+
+### Example:
+
+```jsx
+function handleClick(event) {
+  console.log(event.type); // "click"
+
+  setTimeout(() => {
+    console.log(event.type); // This will log `null` or an error!
+  }, 1000);
+}
+
+<button onClick={handleClick}>Click Me</button>;
+```
+
+**What happens here?**
+
+- The event (`event.type`) is correctly logged inside the event handler.
+- But **after React's event system finishes processing** the event, React clears its properties.
+- So, when the `setTimeout` runs **after the event callback has finished**, the event object no longer contains the expected data.
+
+**How React’s SyntheticEvent Works**
+`SyntheticEvent` is a wrapper that contains all the standard properties of a native event. The `SyntheticEvent` object normalizes properties like `event.target`, `event.key`, and `event.which` to work consistently across different browsers.
+
+For example:
+
+```jsx
+function MyComponent() {
+  const handleClick = (event) => {
+    console.log(event); // Logs a SyntheticEvent object
+    console.log(event.target); // Logs the element clicked
+    console.log(event.type); // Logs "click"
+  };
+
+  return <button onClick={handleClick}>Click Me</button>;
+}
+```
+
+Output:
+
+```
+SyntheticBaseEvent {type: "click", target: button, ...}
+<button>Click Me</button>
+"click"
+```
+
+**How to Fix the Event Pooling Issue?**
+If you need to use the event object asynchronously (e.g., inside `setTimeout`, `fetch`, or `useEffect`), you should **store the event properties in a variable** or **call `event.persist()`** to prevent React from clearing it.
+
+**Solution 1: Store Event Properties in a Variable**
+
+```jsx
+function handleClick(event) {
+  const eventType = event.type; // Store the event property
+
+  setTimeout(() => {
+    console.log(eventType); // Now this works correctly!
+  }, 1000);
+
+  return <button onClick={handleClick}>Click me</button>;
+}
+```
+
+**Solution 2: Use `event.persist()`**
+Calling `event.persist()` prevents React from nullifying the event:
+
+```jsx
+function handleClick(event) {
+  event.persist(); // Prevent React from clearing the event
+
+  setTimeout(() => {
+    console.log(event.type); // Now this works correctly!
+  }, 1000);
+
+  return <button onClick={handleClick}>Click me</button>;
+}
+```
+
+### Js Events vs React Events
+
+1. **Event Binding in JSX**
+
+- Instead of addEventListener, you directly attach event handlers to JSX elements:
+
+```jsx
+<button onClick={handleClick}>Click me</button>
+```
+
+- In vanilla JavaScript:
+
+```js
+document.querySelector("button").addEventListener("click", handleClick);
+```
+
+2. **Event Naming Conventions**
+
+- React uses camelCase for event names: onClick instead of onclick, onChange instead of onchange.
+
+```jsx
+<input onChange={handleChange} />
+```
+
+3. **Arrow Functions And Passing Arguments to Event Handlers**
+
+- In React, you can pass arguments to event handlers using arrow functions:
+
+```jsx
+<button onClick={() => handleClick("Hello")}>Click me</button>
+```
+
+- In vanilla JavaScript, you can use `bind` or `data-*` attributes to pass arguments:
+
+```js
+<button onclick="handleClick('Hello')">Click me</button>
+```
+
+4. **Preventing Default Behavior**
+
+- In React, you can call `event.preventDefault()` to prevent the default behavior of an event:
+
+```jsx
+function handleSubmit(event) {
+  event.preventDefault();
+  // Handle form submission
+}
+```
+
+- In vanilla JavaScript, you can call `event.preventDefault()` on the event object:
+
+```js
+function handleSubmit(event) {
+  event.preventDefault();
+  // Handle form submission
+}
+```
+
+### Commonly Used Events
+
+React allows you to handle various user events like clicks, mouse movements, key presses, and form submissions. You can use event handlers to capture these events and update the component's state accordingly.
+
+**1. Mouse Events**
+
+- `onClick`: Triggered when the user clicks on an element.
+
+**Example:**
+
+```jsx
+import React from "react";
+
+function ClickButton() {
+  function handleClick() {
+    alert("Button clicked!");
+  }
+
+  return <button onClick={handleClick}>Click me</button>;
+}
+```
+
+**2. Form Events**
+
+- `onChange`: Triggered when the value of a form elementlike `<input>` changes.
+  **Example:**
+
+```jsx!
+import React from 'react';
+
+const MyForm = () => {
+  const handleChange = (event) => {
+    console.log('Input value changed:', event.target.value);
+  };
+
+  return (
+    <form>
+      <label>
+        Name:
+        <input type="text" onChange={handleChange} />
+      </label>
+    </form>
+  );
+};
+
+export default MyForm;
+```
+
+Here, when you type in the input field, the `handleChange` function will log the updated value to the console.
+
+`onSubmit`: Triggered when a form is submitted.
+
+```jsx!
+import React from 'react';
+
+const LoginForm = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission (page reload)
+
+    const username = event.target.username.value;
+    const password = event.target.password.value;
+
+    console.log('Username:', username);
+    console.log('Password:', password);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>
+          Username:
+          <input type="text" name="username" />
+        </label>
+      </div>
+      <div>
+        <label>
+          Password:
+          <input type="password" name="password" />
+        </label>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+
+export default LoginForm;
+```
 
 ### Props
 
-_TBA_
+In React, **props** (short for "properties") are used to pass data from one component to another. Props allow components to be dynamic and configurable. They can be passed from a parent component to a child component and are accessible as an object within the child component.
+
+## Example:
+
+### Parent Component (`App.jsx`):
+
+```javascript
+import React from "react";
+import Greeting from "./Greeting";
+
+function App() {
+  return (
+    <div>
+      <Greeting name="John" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+Child Component (Greeting.jsx):
+
+```javascript
+import React from "react";
+
+function Greeting(props) {
+  return <h1>Hello, {props.name}!</h1>;
+}
+
+export default Greeting;
+```
+
+In this example, the name prop is passed from the App component to the Greeting component, where it's rendered dynamically.
 
 ### States
 
-_TBA_
+State is a fundamental concept in React. It allows components to manage and respond to dynamic data. When state changes, React automatically re-renders the component to reflect the updated state.
+
+**Using the `useState` Hook**
+
+In React functional components, you manage state using the `useState` hook. It returns a pair: the current state value and a function to update that state.
+
+**Example: Basic `useState` Hook Usage**
+
+```javascript
+import React, { useState } from "react";
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(count + 1);
+  };
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+In this example, the useState hook initializes the count state to 0. When the button is clicked, the increment function updates the state, causing the component to re-render.
+
+**Example:`useState` with different variable type**
+
+```jsx
+import React, { useState } from "react";
+
+function Greeting() {
+  // Declare a state variable 'name' with an initial value of an empty string
+  const [name, setName] = useState("");
+
+  return (
+    <div style={{ textAlign: "center", marginTop: "20px" }}>
+      <h2>Enter Your Name:</h2>
+      <input
+        type="text"
+        placeholder="Type your name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      {name && <h3>Hi {name}</h3>}
+    </div>
+  );
+}
+
+export default Greeting;
+```
 
 ## Miscellaneous
 
