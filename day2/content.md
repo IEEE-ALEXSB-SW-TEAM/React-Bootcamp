@@ -2,8 +2,6 @@
 
 ## Table of Contents
 
-## Table of Contents
-
 - Node.js and npm Recap
 - [Frameworks and Libraries](#frameworks-and-libraries)
   - [What Are Frameworks?](#what-are-frameworks)
