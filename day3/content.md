@@ -57,6 +57,13 @@ By the end of this session, you should be comfortable fetching data, handling si
 
 #### 2.1 What is the Internet
 - A global system of interconnected computer networks where data travels using common communication protocols (TCP/IP).
+- what is server and client ??
+- why server ?? --> 2.5b user data on facebook, security
+- 7 Layers of OSI Model
+- HTTP1.0 --> one line protocol
+- HTTP2 --> a lot of ops like pipelines, caching, ...
+- HTTPS --> add security through ssl 
+
 
 #### 2.2 RESTful APIs
 - **REST (Representational State Transfer)**: A set of guidelines for building scalable web services.
@@ -73,6 +80,7 @@ By the end of this session, you should be comfortable fetching data, handling si
   - **`axios`**: A popular third-party library.
 
 #### 2.4 Using `fetch` and `axios`
+##### GET REQUEST
 - **`fetch` example**:
   ```jsx
   // Using fetch in a React component
@@ -137,7 +145,84 @@ By the end of this session, you should be comfortable fetching data, handling si
 
   export default AxiosComponent;
   ```
+##### POST REQUEST
+```jsx
+import React, { useState } from 'react';
 
+function FetchPostExample() {
+  const [responseData, setResponseData] = useState(null);
+
+  const createPost = () => {
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: 'New Post',
+        body: 'This is a brand new post.',
+        userId: 1
+      })
+    })
+      .then(response => response.json())
+      .then(json => setResponseData(json))
+      .catch(error => console.error('Error creating post:', error));
+  };
+
+  return (
+    <div>
+      <button onClick={createPost}>Create New Post</button>
+      {responseData && (
+        <div>
+          <h3>Created Post:</h3>
+          <p>ID: {responseData.id}</p>
+          <p>Title: {responseData.title}</p>
+          <p>Body: {responseData.body}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default FetchPostExample;
+
+```
+
+```jsx
+import React, { useState } from 'react';
+import axios from 'axios';
+
+function AxiosPostExample() {
+  const [responseData, setResponseData] = useState(null);
+
+  const createPost = () => {
+    axios.post('https://jsonplaceholder.typicode.com/posts', {
+      title: 'New Post',
+      body: 'This is a brand new post.',
+      userId: 1
+    })
+      .then(response => setResponseData(response.data))
+      .catch(error => console.error('Error creating post:', error));
+  };
+
+  return (
+    <div>
+      <button onClick={createPost}>Create New Post</button>
+      {responseData && (
+        <div>
+          <h3>Created Post:</h3>
+          <p>ID: {responseData.id}</p>
+          <p>Title: {responseData.title}</p>
+          <p>Body: {responseData.body}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default AxiosPostExample;
+
+```
 
 #### 2.5 Handling API Responses
 - Check HTTP status codes and handle them appropriately (e.g., 200 for success, 404 for not found).
