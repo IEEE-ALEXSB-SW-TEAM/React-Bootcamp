@@ -42,6 +42,14 @@ function App() {
 }
 ```
 
+###### Preview:
+
+<body>
+   <div style="color: red; font-size: 20px; background-color: yellow; border: 2px solid black; padding: 10px; margin: 10px;">
+      Hello World
+   </div>
+</body>
+
 CSS properties must be written in camelCase (`backgroundColor` instead of `background-color`). Values must be strings or numbers where applicable.
 
 Inline styles can also be defined directly in JSX:
