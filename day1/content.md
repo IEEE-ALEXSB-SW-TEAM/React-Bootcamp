@@ -1266,3 +1266,7 @@ async function fetchData() {
 }
 fetchData();
 ```
+
+
+**Example Code**  
+You can find the example code in files [index.html](workshop/index.html) and [script.js](workshop/script.js) in this repository.
