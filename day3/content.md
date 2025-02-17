@@ -1,4 +1,46 @@
-## Session 3
+**Outline**  
+
+1. **Introduction**  
+   - Recap of previous sessions and objectives for Session 3
+
+2. **API Calls**  
+   - What is the Internet  
+   - RESTful APIs  
+   - Making API calls in React  
+   - Using `fetch` and `axios`  
+   - Handling API responses  
+   - Error handling  
+   - Async/Await
+
+3. **Side Effects (useEffect)**  
+   - What is a side effect?  
+   - Why we need side effects  
+   - How `useEffect` works (dependencies, cleanup)  
+   - Patterns  
+     - ComponentDidMount (Empty dependency array)  
+     - ComponentDidUpdate (Specifying dependencies)  
+     - ComponentWillUnmount (Cleanup function)
+
+4. **Routing**  
+   - What is routing?  
+   - Why routing is needed  
+   - Using `react-router-dom`  
+   - Basic routing (`BrowserRouter`, `Route`, `Link`)  
+   - Nested routing  
+   - Route parameters
+
+5. **Related Topics**  
+   - Context API  
+   - `useMemo`  
+   - `useCallback`
+
+6. **Workshop**  
+   - Building a small React application that:  
+     - Makes an API call  
+     - Uses `useEffect` for side effects  
+     - Implements routing for different pages  
+
+---
 
 ### 1. Introduction
 In this session, you’ll learn how to:
@@ -96,6 +138,7 @@ By the end of this session, you should be comfortable fetching data, handling si
   export default AxiosComponent;
   ```
 
+
 #### 2.5 Handling API Responses
 - Check HTTP status codes and handle them appropriately (e.g., 200 for success, 404 for not found).
 - Convert response to JSON (if using `fetch`) or rely on Axios to auto-parse JSON.
@@ -188,78 +231,6 @@ function Timer() {
 
 export default Timer;
 ```
-
----
-
-**Detailed Outline (5 Hours)**  
-*(Note: Do not explain the topics in this outline; just list them. The explanations will be provided in the README section.)*
-
-1. **Introduction (15 minutes)**  
-   - Recap of previous sessions and objectives for Session 3
-
-2. **API Calls (45 minutes)**  
-   - What is the Internet  
-   - RESTful APIs  
-   - Making API calls in React  
-   - Using `fetch` and `axios`  
-   - Handling API responses  
-   - Error handling  
-   - Async/Await
-
-3. **Break (10 minutes)**
-
-4. **Side Effects (useEffect) (45 minutes)**  
-   - What is a side effect?  
-   - Why we need side effects  
-   - How `useEffect` works (dependencies, cleanup)  
-   - Patterns  
-     - ComponentDidMount (Empty dependency array)  
-     - ComponentDidUpdate (Specifying dependencies)  
-     - ComponentWillUnmount (Cleanup function)
-
-5. **Routing (45 minutes)**  
-   - What is routing?  
-   - Why routing is needed  
-   - Using `react-router-dom`  
-   - Basic routing (`BrowserRouter`, `Route`, `Link`)  
-   - Nested routing  
-   - Route parameters
-
-6. **Related Topics (15 minutes)**  
-   - Context API  
-   - `useMemo`  
-   - `useCallback`
-
-7. **Break (10 minutes)**
-
-8. **Workshop (1 hour 30 minutes)**  
-   - Building a small React application that:  
-     - Makes an API call  
-     - Uses `useEffect` for side effects  
-     - Implements routing for different pages  
-
----
-
-## README (Explanations & Code Examples in Detail)
-
-### 1. Introduction
-In this session, you’ll learn to:
-
-- Make API calls from React components.
-- Use `useEffect` for managing side effects.
-- Implement client-side routing with `react-router-dom`, including nested routes and route parameters.
-- Understand related concepts such as the Context API, `useMemo`, and `useCallback`.
-
----
-
-### 2. API Calls
-*(See previous examples for `fetch` and `axios` usage.)*
-
----
-
-### 3. Side Effects (useEffect)
-*(See previous examples on how to manage side effects, data fetching, and cleanup.)*
-
 ---
 
 ### 4. Routing
