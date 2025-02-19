@@ -771,6 +771,24 @@ fruits.join(", "); // Convert to string
 fruits.slice(1, 3); // Extract elements
 fruits.concat(["Papaya", "Guava"]); // Merge arrays
 ```
+#### JavaScript `sort()` Default Behavior
+
+- JavaScript's `sort()` method **sorts elements as strings by default**.
+- This means numbers are sorted lexicographically (i.e., by character order).
+  
+##### Example:
+```javascript
+let arr = [6, 3, 37, 88, 14];
+arr = arr.sort();
+console.log(arr);  //output [14, 3, 37, 6, 88]
+```
+- To sort numbers correctly, use a **comparison function**:
+```javascript
+arr.sort((a, b) => a - b);
+console.log(arr);  //output [3, 6, 14, 37, 88]
+```
+
+
 
 #### **Arrays of Different Types:**  
 ```js
