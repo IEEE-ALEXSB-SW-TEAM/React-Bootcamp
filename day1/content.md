@@ -105,7 +105,7 @@ This creates a clickable link that directs users to https://www.example.com.
 
 #### Linking to an Phone Number
 ```html
-<a href="tel:+201278858771">lel mo3gabat</a>
+<a href="tel:+0123456789">lel mo3gabat</a>
 ```
 ---
 
