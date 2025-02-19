@@ -2,7 +2,11 @@
 
 ## Table of Contents
 
-- Node.js and npm Recap
+- [Node.js and npm](#nodejs-and-npm)
+  - [What is Node.js?](#what-is-nodejs)
+  - [Installing Node.js](#installing-nodejs)
+  - [What is npm?](#what-is-npm)
+  - [Using npm](#using-npm)
 - [Frameworks and Libraries](#frameworks-and-libraries)
   - [What Are Frameworks?](#what-are-frameworks)
   - [Why Use Frameworks?](#why-use-frameworks)
@@ -22,19 +26,66 @@
   - [Virtual DOM](#virtual-dom)
   - [Create A Component](#create-a-component)
   - [Functional Components vs Class Components](#functional-components-vs-class-components)
+- [Props](#props)
 - [Assets](#assets)
+- [Workshop 1](#workshop-1)
 - [Events](#events)
   - [Js Events vs React Events](#js-events-vs-react-events)
   - [Commonly Used Events](#commonly-used-events)
-- [Props](#props)
 - [States](#states)
   - [Using the `useState` Hook](#using-the-usestate-hook)
 - [Miscellaneous](#miscellaneous)
   - [List Rendering](#list-rendering)
   - [Conditional Rendering](#conditional-rendering)
-- [Workshop](#workshop)
+- [Workshop 2](#workshop-2)
 
 ---
+
+## Node.js and npm
+
+When JavaScript first appeared in 1995, its initial purpose was to make web pages interactive. However, over the years, JavaScript has evolved into a versatile language that can be used for developing web, desktop, and mobile apps, due to its increasing popularity. In order to run JavaScript locally, Node.js was created.
+
+### What is Node.js?
+
+Node.js is a runtime environment that allows you to run JavaScript locally without the need for a web browser, enabling you to build full-stack applications using JavaScript. Node.js is built on the V8 JavaScript engine, which is the same engine that powers Google Chrome.
+
+### Installing Node.js
+
+To install Node.js, visit the official website at [nodejs.org](https://nodejs.org/) and download the latest version for your operating system.
+
+To check if Node.js is installed, open a terminal and run the following command:
+
+```sh
+node -v
+```
+
+This will display the version of Node.js installed on your system.
+
+To use Node.js, you can create a JavaScript file with the `.js` extension and run it using the `node` command:
+
+```sh
+node filename.js
+```
+
+### What is npm?
+
+npm (Node Package Manager) is a package manager for Node.js that allows you to install, manage, and share JavaScript packages. npm is the largest software registry in the world, with over 1.3 million packages available for download.
+
+### Using npm
+
+Before you can use npm, you need to initialize a new project by running the following command:
+
+```sh
+npm init
+```
+
+This will create a `package.json` file in your project directory, which contains information about your project and its dependencies.
+
+To install a package using npm, run the following command:
+
+```sh
+npm install package-name
+```
 
 ## Frameworks and Libraries
 
@@ -266,7 +317,7 @@ In React, there are two primary ways to create components: function and class co
 
 - **Function Components:** These are simple JavaScript functions that take props as input and return JSX elements. They are often used for presentational or stateless components.
 
-```jsx!
+```jsx
 function WelcomeMessage(props) {
   return <h1>Welcome, {props.name}</h1>;
 }
@@ -276,7 +327,7 @@ Functional components are some of the more common components that will come acro
 
 - **Class Components:** These are ES6 classes that extend from React.Component or React.PureComponent. They have a render() method where you define the structure of your component's UI using JSX. Class components are used for components that need to manage state or have lifecycle methods.
 
-```jsx!
+```jsx
 class Welcome extends React.Component {
   render() {
     return <h1>Hello, {this.props.name}</h1>;
@@ -287,6 +338,43 @@ class Welcome extends React.Component {
 Class components are good for managing state and handling more complex logic. They come with a bunch of built-in methods for managing the component’s lifecycle.
 
 But because they’re more complex, they can be harder to read and write, especially for beginners.
+
+### Props
+
+In React, **props** (short for "properties") are used to pass data from one component to another. Props allow components to be dynamic and configurable. They can be passed from a parent component to a child component and are accessible as an object within the child component.
+
+## Example:
+
+### Parent Component (`App.jsx`):
+
+```javascript
+import React from "react";
+import Greeting from "./Greeting";
+
+function App() {
+  return (
+    <div>
+      <Greeting name="John" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+Child Component (Greeting.jsx):
+
+```javascript
+import React from "react";
+
+function Greeting(props) {
+  return <h1>Hello, {props.name}!</h1>;
+}
+
+export default Greeting;
+```
+
+In this example, the name prop is passed from the App component to the Greeting component, where it's rendered dynamically.
 
 ## Assets
 
@@ -316,6 +404,10 @@ export default App;
 ```
 
 The first method is recommended for images that are used frequently in the application, while the second method is recommended for images that are used infrequently or are large in size.
+
+## Workshop 1
+
+Create a card component that display the name, age, and image of a person. The component should accept these details as props and display them in a card format.
 
 ## Events
 
@@ -366,7 +458,7 @@ function MyComponent() {
 Output:
 
 ```
-SyntheticBaseEvent {type: "click", target: button, ...}
+SyntheticBaseEvent {type: "click", target: button, ...}
 <button>Click Me</button>
 "click"
 ```
@@ -403,7 +495,7 @@ function handleClick(event) {
 }
 ```
 
-### Js Events vs React Events
+### JS Events vs React Events
 
 1. **Event Binding in JSX**
 
@@ -488,7 +580,7 @@ function ClickButton() {
 - `onChange`: Triggered when the value of a form elementlike `<input>` changes.
   **Example:**
 
-```jsx!
+```jsx
 import React from 'react';
 
 const MyForm = () => {
@@ -513,7 +605,7 @@ Here, when you type in the input field, the `handleChange` function will log the
 
 `onSubmit`: Triggered when a form is submitted.
 
-```jsx!
+```jsx
 import React from 'react';
 
 const LoginForm = () => {
@@ -548,43 +640,6 @@ const LoginForm = () => {
 
 export default LoginForm;
 ```
-
-### Props
-
-In React, **props** (short for "properties") are used to pass data from one component to another. Props allow components to be dynamic and configurable. They can be passed from a parent component to a child component and are accessible as an object within the child component.
-
-## Example:
-
-### Parent Component (`App.jsx`):
-
-```javascript
-import React from "react";
-import Greeting from "./Greeting";
-
-function App() {
-  return (
-    <div>
-      <Greeting name="John" />
-    </div>
-  );
-}
-
-export default App;
-```
-
-Child Component (Greeting.jsx):
-
-```javascript
-import React from "react";
-
-function Greeting(props) {
-  return <h1>Hello, {props.name}!</h1>;
-}
-
-export default Greeting;
-```
-
-In this example, the name prop is passed from the App component to the Greeting component, where it's rendered dynamically.
 
 ### States
 
@@ -715,7 +770,7 @@ export default App;
   <h1>Welcome back!</h1>
 </div>
 
-## Workshop
+## Workshop 2
 
 You will build an expense tracker application using React. The application will allow users to add, edit, and delete expenses, and display a summary of the total expenses. The application will consist of the following components:
 
