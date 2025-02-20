@@ -403,6 +403,14 @@ function App() {
 export default App;
 ```
 
+
+
+
+
+
+
+
+..
 The first method is recommended for images that are used frequently in the application, while the second method is recommended for images that are used infrequently or are large in size.
 
 ## Workshop 1
@@ -413,87 +421,7 @@ Create a card component that display the name, age, and image of a person. The c
 
 **React Synthetic Events & Event Pooling**
 
-In React, event objects are instances of **SyntheticEvent**, which is a wrapper around the native DOM event. React uses synthetic events to ensure that event handling works consistently across different browsers by normalizing the event properties. One key difference between synthetic events and native events is that **React pools event objects for performance reasons**.
-
-**What Does "Pooled Events" Mean?**
-React reuses (or **pools**) event objects instead of creating a new event object every time an event is fired which **reduces memory usage and improves performance**. This means that **after the event callback finishes executing, React clears the event's properties** to make it available for reuse in future events. As a result, if you try to access the event properties asynchronously (e.g., inside a `setTimeout`), the event object may have been reset.
-
-### Example:
-
-```jsx
-function handleClick(event) {
-  console.log(event.type); // "click"
-
-  setTimeout(() => {
-    console.log(event.type); // This will log `null` or an error!
-  }, 1000);
-}
-
-<button onClick={handleClick}>Click Me</button>;
-```
-
-**What happens here?**
-
-- The event (`event.type`) is correctly logged inside the event handler.
-- But **after React's event system finishes processing** the event, React clears its properties.
-- So, when the `setTimeout` runs **after the event callback has finished**, the event object no longer contains the expected data.
-
-**How React’s SyntheticEvent Works**
-`SyntheticEvent` is a wrapper that contains all the standard properties of a native event. The `SyntheticEvent` object normalizes properties like `event.target`, `event.key`, and `event.which` to work consistently across different browsers.
-
-For example:
-
-```jsx
-function MyComponent() {
-  const handleClick = (event) => {
-    console.log(event); // Logs a SyntheticEvent object
-    console.log(event.target); // Logs the element clicked
-    console.log(event.type); // Logs "click"
-  };
-
-  return <button onClick={handleClick}>Click Me</button>;
-}
-```
-
-Output:
-
-```
-SyntheticBaseEvent {type: "click", target: button, ...}
-<button>Click Me</button>
-"click"
-```
-
-**How to Fix the Event Pooling Issue?**
-If you need to use the event object asynchronously (e.g., inside `setTimeout`, `fetch`, or `useEffect`), you should **store the event properties in a variable** or **call `event.persist()`** to prevent React from clearing it.
-
-**Solution 1: Store Event Properties in a Variable**
-
-```jsx
-function handleClick(event) {
-  const eventType = event.type; // Store the event property
-
-  setTimeout(() => {
-    console.log(eventType); // Now this works correctly!
-  }, 1000);
-
-  return <button onClick={handleClick}>Click me</button>;
-}
-```
-
-**Solution 2: Use `event.persist()`**
-Calling `event.persist()` prevents React from nullifying the event:
-
-```jsx
-function handleClick(event) {
-  event.persist(); // Prevent React from clearing the event
-
-  setTimeout(() => {
-    console.log(event.type); // Now this works correctly!
-  }, 1000);
-
-  return <button onClick={handleClick}>Click me</button>;
-}
-```
+In React, event objects are instances of **SyntheticEvent**, which is a wrapper around the native DOM event. React uses synthetic events to ensure that event handling works consistently across different browsers by normalizing the event properties. 
 
 ### JS Events vs React Events
 
@@ -530,27 +458,10 @@ document.querySelector("button").addEventListener("click", handleClick);
 - In vanilla JavaScript, you can use `bind` or `data-*` attributes to pass arguments:
 
 ```js
-<button onclick="handleClick('Hello')">Click me</button>
-```
 
-4. **Preventing Default Behavior**
+  const button = document.getElementById("myButton");
+  button.addEventListener("click", handleClick.bind(null, "Hello"));
 
-- In React, you can call `event.preventDefault()` to prevent the default behavior of an event:
-
-```jsx
-function handleSubmit(event) {
-  event.preventDefault();
-  // Handle form submission
-}
-```
-
-- In vanilla JavaScript, you can call `event.preventDefault()` on the event object:
-
-```js
-function handleSubmit(event) {
-  event.preventDefault();
-  // Handle form submission
-}
 ```
 
 ### Commonly Used Events
